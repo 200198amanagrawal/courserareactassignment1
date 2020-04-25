@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Card, CardImg, CardImgOverlay, CardText, CardBody,
-  CardTitle } from 'reactstrap';
+import DishDetail from "./DishdetailComponent";
+import { Card, CardImg, CardImgOverlay, CardTitle } from 'reactstrap';
 /***
  * this component is basically rendering the whole content of the class.
  * here we are imply clicking over a single card and that is displayed in the bottom.
@@ -12,47 +12,22 @@ import { Card, CardImg, CardImgOverlay, CardText, CardBody,
         super(props);
 
         this.state = {
-            selectedDish: null
+            selectedDish: null,
+            comments:null
         }
     }
-/**
- * 
- * On clicking the card the particular state of the dish is updated which is updated using setState. 
- */
-    onDishSelect(dish) {
+
+    onDishSelect(dish,cmt) {
         this.setState({ selectedDish: dish});
+        this.setState({comments:cmt});
     }
-/**
- *A function which is showing the card layout of the image selected.The dish is an argument of the
- selected card. It renders the data f there is a card selected otherwise returns an empty <div>
- */
-    renderDish(dish) {
-        if (dish != null)
-            return(
-                <Card>
-                    <CardImg top src={dish.image} alt={dish.name} />
-                    <CardBody>
-                      <CardTitle>{dish.name}</CardTitle>
-                      <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
-            );
-        else
-            return(
-                <div></div>
-            );
-    }
-/**
- * Main code which deatures the card layout.a menu constant is defined which is runing the whole 
- * card layout in a loop.This card is alaso taking the onClick and tking the dish and setting the state.
- * after that if the click happens and the dish state is set then the renderimage(dish) is called.
- */
+    
     render() {
         const menu = this.props.dishes.map((dish) => {
             return (
               <div  className="col-12 col-md-5 m-1">
                 <Card key={dish.id}
-                  onClick={() => this.onDishSelect(dish)}>
+                  onClick={() => this.onDishSelect(dish,dish.comments)}>
                   <CardImg width="100%" src={dish.image} alt={dish.name} />
                   <CardImgOverlay>
                       <CardTitle>{dish.name}</CardTitle>
@@ -67,11 +42,7 @@ import { Card, CardImg, CardImgOverlay, CardText, CardBody,
                 <div className="row">
                     {menu}
                 </div>
-                <div className="row">
-                  <div  className="col-12 col-md-5 m-1">
-                    {this.renderDish(this.state.selectedDish)}
-                  </div>
-                </div>
+                    <DishDetail dish={this.state.selectedDish} comments={this.state.comments}/>
             </div>
         );
     }
